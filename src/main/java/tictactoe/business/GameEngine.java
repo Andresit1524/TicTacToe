@@ -1,9 +1,7 @@
 package tictactoe.business;
 
-import tictactoe.data.Board;
 import tictactoe.data.GameState;
 import tictactoe.ui.UIManager;
-import tictactoe.ui.GetImputs;
 
 /**
  * Programa principal. Controla todo el flujo del juego
@@ -13,12 +11,20 @@ import tictactoe.ui.GetImputs;
  */
 public class GameEngine {
     private static UIManager uim = new UIManager();
-    private static GetImputs gim = new GetImputs();
     private static GameState gs;
-    private static Board b;
-    private static WinChecker wc;
 
     public static void main(String[] args) {
+        // Imprime el encabezado del juego
         uim.printHeader();
+
+        // Elige el modo de juego
+        int gameMode = uim.chooseGameMode();
+
+        // Crea la instancia de estado del juego
+        gs = new GameState(gameMode);
+
+        // Instancia a los nombres de los dos jugadores
+        uim.printBar();
+
     }
 }
