@@ -52,6 +52,7 @@ public class Board {
             return false;
         }
 
+        // Si no está lleno, evalúa el recuadro seleccionado
         return board[row][col] == 0;
     }
 
@@ -60,12 +61,12 @@ public class Board {
      * movimiento válido. Retorna false si el movimiento no es válido.
      */
     public boolean setSquare(int movement, int row, int col) {
-        // Verifica que el recuadro está disponible
+        // Retorna si el recuadro no está disponible
         if (!isAvailableSquare(row, col)) {
             return false;
         }
 
-        // Escribe en el recuadro y retorna
+        // Escribe en el recuadro y retorna true
         board[row][col] = movement;
 
         return true;
@@ -75,7 +76,7 @@ public class Board {
      * Convierte el tablero en una representación de string que pueda ser impresa.
      * También hace conversión del signo a O (jugador 1) o X (jugador 2).
      */
-    public String getBoard() {
+    public String getBoardString() {
         String boardString = "";
 
         // Recorre cada fila
@@ -107,6 +108,13 @@ public class Board {
         }
 
         return boardString;
+    }
+
+    /**
+     * Accede al tablero con sus valores numéricos
+     */
+    public int[][] getBoard() {
+        return board;
     }
 
     /**
