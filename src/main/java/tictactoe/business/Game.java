@@ -159,15 +159,15 @@ public class Game {
         int square;
         boolean settedSquare = false;
 
-        // // Hacemos una pausa de 2000 +- 1000 ms para que no sea instantáneo
-        // try {
-        // int baseTime = 1500;
-        // int variance = 1000;
-        // Thread.sleep(baseTime + r.nextInt(-variance, variance));
-        // } catch (InterruptedException e) {
-        // Thread.currentThread().interrupt();
-        // System.err.println("La pausa del juego fue interrumpida.");
-        // }
+        // Hacemos una pausa de 1500 +- 1000 ms para que el bot no sea instantáneo
+        try {
+            int baseTime = 1500;
+            int variance = 1000;
+            Thread.sleep(baseTime + r.nextInt(-variance, variance));
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.err.println("La pausa del juego fue interrumpida.");
+        }
 
         // Repetimos hasta que haya movimiento o el tablero se llene
         while (!settedSquare && !board.isFull()) {

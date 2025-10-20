@@ -3,6 +3,7 @@ package tictactoe.business;
 import java.util.Scanner;
 
 import tictactoe.ui.InputChecker;
+import tictactoe.ui.UIUtilities;
 
 /**
  * Programa principal. Controla todo el flujo del juego.
@@ -11,27 +12,16 @@ import tictactoe.ui.InputChecker;
  * @version 1
  */
 public class GameEngine {
-    private static void printHeader() {
-        System.out.println("+------------------------------------------------------------+");
-        System.out.println("|                       TicTacToe (v1)                       |");
-        System.out.println("+------------------------------------------------------------+");
-        System.out.println("|              por Hayran Andrés López González              |");
-        System.out.println("+------------------------------------------------------------+");
-        System.out.println("| Selecciona el modo de juego que prefieras                  |");
-        System.out.println("|                                                            |");
-        System.out.println("| 1. Humano vs Humano                                        |");
-        System.out.println("| 2. Humano vs Bot                                           |");
-        System.out.println("| 3. Bot vs Bot                                              |");
-        System.out.println("| 4. Salir                                                   |");
-        System.out.println("+------------------------------------------------------------+");
-    }
-
     public static void main(String[] args) {
-        // Se crea una única instancia de Scanner para toda la aplicación
-        Scanner scanner = new Scanner(System.in);
-        InputChecker ic = new InputChecker(scanner);
+        // Se crea únicas instancias para toda la aplicación
+        Scanner s = new Scanner(System.in);
+        InputChecker ic = new InputChecker(s);
+        UIUtilities uii = new UIUtilities();
 
-        printHeader();
+        // Imprime el encabezado e inicio del juego
+        uii.printHeader();
+        uii.printInstructions();
+        uii.printModesMenu();
 
         // Elige el modo de juego
         int choice;
@@ -45,7 +35,7 @@ public class GameEngine {
         }
 
         // Inicia la partida
-        Game game = new Game(choice - 1, scanner);
+        Game game = new Game(choice - 1, s);
         game.start();
     }
 }
