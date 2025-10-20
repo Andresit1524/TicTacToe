@@ -5,28 +5,34 @@ import java.util.Random;
 import tictactoe.data.*;
 import tictactoe.ui.*;
 
+// ! BUG 2396: los ganadores no se asignan de forma correcta
+
 /**
  * Controla una única partida del juego
  * 
  * @author Andrés López
- * @version 1
+ * @version 1.1
  */
-
 public class Game {
+    // Utilidades
     private final Scanner s;
     private final Random r;
     private final InputChecker ic;
     private final BotHeuristics bh;
     private final WinChecker wc;
+    private final UIUtilities uii;
+
+    // Tablero y modo de juego
+    private final Board board;
+    private final int gameMode;
 
     private Player player1;
     private Player player2;
-    private Board board;
-    private int gameMode;
 
     // Lista de nombres para bots
-    private String[] botsNameList = { "Manuel", "Alfredo", "Roberto", "Carlos", "Luis", "Sofía", "Ana", "María",
-            "Lucía", "Pedro", "Diego", "Elena", "Paula", "Jorge", "Miguel" };
+    private String[] botsNameList = { "Wall-E", "R2-D2", "C-3PO", "Optimus Prime", "Bumblebee", "GLaDOS", "HAL 9000",
+            "Ultron", "Skynet", "Deep Blue", "Watson", "Sophia", "Data", "T-800", "Robocop"
+    };
 
     public Game(int gameMode, Scanner scanner) {
         this.gameMode = gameMode;
@@ -38,21 +44,7 @@ public class Game {
         this.ic = new InputChecker(scanner);
         this.bh = new BotHeuristics();
         this.wc = new WinChecker(this.board);
-    }
-
-    /**
-     * Función auxiliar que imprime una línea vacía con el marco que tendrá en
-     * consola
-     */
-    private void printBlankLine() {
-        System.out.println("| ");
-    }
-
-    /**
-     * Función auxiliar que imprime la barra vertical
-     */
-    private void printBar() {
-        System.out.println("+------------------------------------------------------------+");
+        this.uii = new UIUtilities();
     }
 
     /**
@@ -67,7 +59,7 @@ public class Game {
 
             if (name.trim().isEmpty()) {
                 System.out.println("| El nombre no puede estar vacío. Intenta de nuevo");
-                printBlankLine();
+                uii.printBlankLine();
             }
         } while (name.trim().isEmpty());
 
@@ -83,7 +75,7 @@ public class Game {
 
         // Repite hasta obtener una versión válida
         do {
-            botName = botsNameList[r.nextInt(botsNameList.length)] + " " + botsNameList[r.nextInt(botsNameList.length)];
+            botName = botsNameList[r.nextInt(botsNameList.length)];
         } while (botName.equals(existingName));
 
         return botName;
@@ -94,12 +86,12 @@ public class Game {
      */
     private String[] setPlayersNames() {
         String[] playerNames = new String[2];
-        printBar();
+        uii.printBar();
 
         switch (gameMode) {
             case 0: // Humano vs Humano
                 playerNames[0] = getPlayerName(1);
-                printBlankLine();
+                uii.printBlankLine();
                 playerNames[1] = getPlayerName(2);
                 break;
             case 1: // Humano vs Bot
@@ -140,13 +132,21 @@ public class Game {
         String[] playerNames = setPlayersNames();
         Player[] players = createPlayers(playerNames);
 
+        // Imprime los nombres del enfrentamiento
+        uii.printBar();
+        System.out.printf("| %s vs %s\n", playerNames[0], playerNames[1]);
+        uii.printBlankLine();
+
+        // El turno empieza al azar
+        boolean currTurn = r.nextBoolean();
+
         // Alternamos los turnos con un valor booleano
-        boolean currTurn = true;
         while (true) {
+            // Imprime el tablero y el turno
             System.out.println(board.getBoardString());
-            printBar();
+            uii.printBar();
             System.out.println("| Turno de " + (playerNames[currTurn ? 0 : 1]));
-            printBlankLine();
+            uii.printBlankLine();
 
             // Turno del jugador humano o bot (1: jugador 1, -1, jugador 2)
             // El turno se repite hasta que sea válido y mientras el tablero no esté lleno
@@ -158,16 +158,26 @@ public class Game {
                     System.out.println("| Ingresa la casilla a jugar (1-9)");
                     square = ic.getInteger(1, 9);
                     settedSquare = board.setSquare(currTurn ? 1 : -1, square - 1);
+                    uii.printBlankLine();
 
                     if (settedSquare) {
                         break;
                     } else {
                         System.out.println("| Casilla ocupada. Intenta de nuevo");
-                        printBlankLine();
+                        uii.printBlankLine();
                     }
                 }
             } else {
                 // Turno del jugador bot
+                // Pausa para dar tiempo a ver el movimiento
+                try {
+                    // Pausa de 2000 +- 1000 milisegundos
+                    Thread.sleep(2000 + r.nextInt(-1000, 1000));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    System.err.println("La pausa del juego fue interrumpida.");
+                }
+
                 while (!board.isFull()) {
                     square = bh.getBestMove(board);
                     settedSquare = board.setSquare(currTurn ? 1 : -1, square - 1);
@@ -184,16 +194,16 @@ public class Game {
             // Primero, revisa si alguien ganó. Si nadie ganó, revisa si hay empate
             if (winner != 0) {
                 System.out.println(board.getBoardString());
-                printBar();
+                uii.printBar();
                 String winnerName = (winner == 1) ? playerNames[0] : playerNames[1];
                 System.out.println("| ¡Fin del juego! el ganador es " + winnerName);
-                printBar();
+                uii.printBar();
                 return;
             } else if (board.isFull()) {
                 System.out.println(board.getBoardString());
-                printBar();
+                uii.printBar();
                 System.out.println("| ¡Fin del juego! empate");
-                printBar();
+                uii.printBar();
                 return;
             }
 

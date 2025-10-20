@@ -4,7 +4,7 @@ import java.util.Scanner;
 import tictactoe.ui.InputChecker;
 
 /**
- * Programa principal. Controla todo el flujo del juego
+ * Programa principal. Controla todo el flujo del juego.
  * 
  * @author Andrés López
  * @version 1
