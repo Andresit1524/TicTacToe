@@ -1,8 +1,9 @@
 package tictactoe.business;
 
-import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
+
 import tictactoe.data.Board;
 
 /**
@@ -10,7 +11,7 @@ import tictactoe.data.Board;
  * jugadores no humanos se almacenan como parte de la clase Player.
  * 
  * @author Andrés López
- * @version 1
+ * @version 1.1
  */
 public class BotHeuristics {
     Random r = new Random();
@@ -18,16 +19,17 @@ public class BotHeuristics {
     /**
      * Obtiene el mejor movimiento dado el tablero actual.
      */
-    public int getBestMove(Board board) {
-        // Prioridad 1: Buscar un movimiento para ganar (el bot es -1)
-        int move = findWinningOrBlockingMove(board, -1);
+    public int getBestMove(Board board, int botPlayerValue) {
+        int opponentPlayerValue = botPlayerValue * -1; // El oponente es el valor inverso
+
+        // Prioridad 1: Buscar un movimiento para ganar
+        int move = findWinningOrBlockingMove(board, botPlayerValue);
         if (move != -1) {
             return move;
         }
 
-        // Prioridad 2: Buscar un movimiento para bloquear al oponente (el oponente es
-        // 1)
-        move = findWinningOrBlockingMove(board, 1);
+        // Prioridad 2: Buscar un movimiento para bloquear al oponente
+        move = findWinningOrBlockingMove(board, opponentPlayerValue);
         if (move != -1) {
             return move;
         }

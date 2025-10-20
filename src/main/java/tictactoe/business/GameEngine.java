@@ -1,6 +1,7 @@
 package tictactoe.business;
 
 import java.util.Scanner;
+
 import tictactoe.ui.InputChecker;
 
 /**

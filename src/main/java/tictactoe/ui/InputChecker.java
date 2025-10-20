@@ -36,7 +36,7 @@ public class InputChecker {
             return input;
         } catch (Exception e) {
             s.nextLine(); // Limpia el buffer en caso de entrada no numérica (ej. "abc")
-            System.out.println("Entrada no valida, intenta de nuevo");
+            System.out.println("| Entrada no valida, intenta de nuevo");
             System.out.println("| ");
         }
 
