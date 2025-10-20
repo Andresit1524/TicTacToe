@@ -4,56 +4,28 @@ package tictactoe.data;
  * Almacena los datos del jugador y actúa como instancia del mismo para el
  * control del juego.
  * 
- * El modo indica si el jugador es humano o no:
- * 
- * - 0: humano
- * - 1: bot
- * 
  * @author Andrés López
  * @version 1
  */
 public class Player {
     private String name;
-    private int points;
-    private int mode;
+    private boolean isBot;
 
     /**
-     * Jugador con nombre y modo (para bots)
-     */
-    public Player(String name, int mode) {
-        this.name = name;
-        this.mode = mode;
-        points = 0;
-    }
-
-    /**
-     * Jugador solo con nombre (para humanos)
+     * Constructor para jugadores humanos. Indica nombre solamente.
      */
     public Player(String name) {
         this.name = name;
-        mode = 0;
-        points = 0;
+        this.isBot = false;
     }
 
     /**
-     * Añade un punto al jugador
+     * Constructor para (generalmente) bots.
+     * Puedes indicar que es humano con isBot = false.
      */
-    public void addPoint() {
-        points++;
-    }
-
-    /**
-     * Obtiene el puntaje del jugador
-     */
-    public int getPoints() {
-        return points;
-    }
-
-    /**
-     * Establece el nombre del jugador
-     */
-    public void setName(String name) {
+    public Player(String name, boolean isBot) {
         this.name = name;
+        this.isBot = isBot;
     }
 
     /**
@@ -64,22 +36,9 @@ public class Player {
     }
 
     /**
-     * Establece el modo del jugador (humano o bot):
-     * 
-     * - 0: humano
-     * - 1: bot
+     * Obtiene el rol (humano o bot) del jugador
      */
-    public void setMode(int mode) {
-        this.mode = mode;
-    }
-
-    /**
-     * Obtiene el modo del jugador:
-     * 
-     * - 0: humano
-     * - 1: bot
-     */
-    public int getMode() {
-        return mode;
+    public boolean isBot() {
+        return isBot;
     }
 }

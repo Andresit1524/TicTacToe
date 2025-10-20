@@ -1,7 +1,7 @@
 package tictactoe.business;
 
-import tictactoe.data.GameState;
-import tictactoe.ui.UIManager;
+import java.util.Scanner;
+import tictactoe.ui.InputChecker;
 
 /**
  * Programa principal. Controla todo el flujo del juego
@@ -10,21 +10,41 @@ import tictactoe.ui.UIManager;
  * @version 1
  */
 public class GameEngine {
-    private static UIManager uim = new UIManager();
-    private static GameState gs;
+    private static void printHeader() {
+        System.out.println("+------------------------------------------------------------+");
+        System.out.println("|                       TicTacToe (v1)                       |");
+        System.out.println("+------------------------------------------------------------+");
+        System.out.println("|              por Hayran Andrés López González              |");
+        System.out.println("+------------------------------------------------------------+");
+        System.out.println("| Selecciona el modo de juego que prefieras                  |");
+        System.out.println("|                                                            |");
+        System.out.println("| 1. Humano vs Humano                                        |");
+        System.out.println("| 2. Humano vs Bot                                           |");
+        System.out.println("| 3. Bot vs Bot                                              |");
+        System.out.println("| 4. Salir                                                   |");
+        System.out.println("+------------------------------------------------------------+");
+    }
 
     public static void main(String[] args) {
-        // Imprime el encabezado del juego
-        uim.printHeader();
+        // Se crea una única instancia de Scanner para toda la aplicación
+        Scanner scanner = new Scanner(System.in);
+        InputChecker ic = new InputChecker(scanner);
+
+        printHeader();
 
         // Elige el modo de juego
-        int gameMode = uim.chooseGameMode();
+        int choice;
 
-        // Crea la instancia de estado del juego
-        gs = new GameState(gameMode);
+        System.out.println("| Ingresa una opción");
+        choice = ic.getInteger(1, 4);
 
-        // Instancia a los nombres de los dos jugadores
-        uim.printBar();
+        // Si elegimos salir
+        if (choice == 4) {
+            System.exit(0);
+        }
 
+        // Inicia la partida
+        Game game = new Game(choice - 1, scanner);
+        game.start();
     }
 }

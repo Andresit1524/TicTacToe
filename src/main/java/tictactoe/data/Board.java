@@ -14,11 +14,21 @@ package tictactoe.data;
 public class Board {
     // Arreglo que almacena el tablero
     private int[][] board;
-    private boolean isFull;
 
     public Board() {
         board = new int[3][3];
-        isFull = false;
+    }
+
+    /**
+     * Constructor de copia. Crea un nuevo tablero que es un clon exacto de otro.
+     */
+    public Board(Board other) {
+        int[][] otherBoard = other.getBoard();
+        int size = otherBoard.length;
+        this.board = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            System.arraycopy(otherBoard[i], 0, this.board[i], 0, size);
+        }
     }
 
     /**
@@ -26,21 +36,15 @@ public class Board {
      */
     public boolean isFull() {
         // Empieza asumiendo que esta lleno
-        isFull = true;
-
         // Si hay un cero, entonces no está lleno
         for (int[] row : board) {
             for (int square : row) {
                 if (square == 0) {
-                    isFull = false;
-
-                    // Retorna de inmediato
-                    return isFull;
+                    return false; // Encontramos un espacio vacío, no está lleno.
                 }
             }
         }
-
-        return isFull;
+        return true; // No se encontraron espacios vacíos, está lleno.
     }
 
     /**
@@ -48,19 +52,18 @@ public class Board {
      */
     public boolean isAvailableSquare(int row, int col) {
         // Si está lleno, no hay recuadro disponible
-        if (isFull) {
-            return false;
-        }
-
-        // Si no está lleno, evalúa el recuadro seleccionado
-        return board[row][col] == 0;
+        return board[row][col] == 0; // Simplemente comprueba si la casilla es 0
     }
 
     /**
      * Establece el recuadro seleccionado del tablero con el valor indicado, si es
      * movimiento válido. Retorna false si el movimiento no es válido.
      */
-    public boolean setSquare(int movement, int row, int col) {
+    public boolean setSquare(int movement, int square) {
+        // Calcula row y col en función de la casilla en cuestión
+        int row = square / 3;
+        int col = square % 3;
+
         // Retorna si el recuadro no está disponible
         if (!isAvailableSquare(row, col)) {
             return false;
@@ -80,11 +83,11 @@ public class Board {
         String boardString = "";
 
         // Recorre cada fila
-        for (int[] row : board) {
-            boardString += "| ";
+        for (int row = 0; row < board.length; row++) {
+            boardString += "| | ";
 
             // Recorre cada elemento de la fila
-            for (int square : row) {
+            for (int square : board[row]) {
                 switch (square) {
                     case 0:
                         boardString += " ";
@@ -99,12 +102,14 @@ public class Board {
                         break;
                 }
 
-                // Espacio entre elementos
+                // Espacio entre elementos (incluyendo el último, como borde)
                 boardString += " | ";
             }
 
-            // Salto de línea entre filas
-            boardString += "\n";
+            // Salto de línea entre filas (excepto en la última)
+            if (row != board.length - 1) {
+                boardString += "\n";
+            }
         }
 
         return boardString;

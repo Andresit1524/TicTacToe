@@ -12,23 +12,23 @@ import tictactoe.data.Board;
  * @version 1
  */
 public class WinChecker {
-    private int[][] boardValues;
+    private Board board;
     private int boardSize;
 
     public WinChecker(Board board) {
-        this.boardValues = board.getBoard();
-        boardSize = boardValues.length;
+        this.board = board;
+        this.boardSize = board.getBoard().length;
     }
 
     /**
      * Función auxiliar que suma las filas, columnas y diagonales del tablero
      */
-    private ArrayList<Integer> sums() {
+    private ArrayList<Integer> getSums() {
         // Lista final de sumas
         ArrayList<Integer> sumsList = new ArrayList<>();
 
         // 1. Suma de filas
-        for (int[] row : boardValues) {
+        for (int[] row : board.getBoard()) {
             int rowSum = 0;
 
             for (int square : row) {
@@ -43,7 +43,7 @@ public class WinChecker {
             int colSum = 0;
 
             for (int j = 0; j < boardSize; j++) {
-                colSum += boardValues[j][i];
+                colSum += board.getBoard()[j][i];
             }
 
             sumsList.add(colSum);
@@ -52,7 +52,7 @@ public class WinChecker {
         // 3. Suma de la diagonal principal
         int diagonalSum = 0;
         for (int i = 0; i < boardSize; i++) {
-            diagonalSum += boardValues[i][i];
+            diagonalSum += board.getBoard()[i][i];
         }
 
         sumsList.add(diagonalSum);
@@ -60,7 +60,7 @@ public class WinChecker {
         // 4. Suma de la diagonal secundaria
         diagonalSum = 0;
         for (int i = 0; i < boardSize; i++) {
-            diagonalSum += boardValues[i][boardSize - i - 1];
+            diagonalSum += board.getBoard()[i][boardSize - i - 1];
         }
 
         sumsList.add(diagonalSum);
@@ -77,13 +77,13 @@ public class WinChecker {
     public int winner() {
         // Si dentro de las sumas hay un 3, quiere decir que hubo tres 1s en fila
         // Entonces es victoria del jugador 1
-        if (sums().contains(3)) {
+        if (getSums().contains(boardSize)) {
             return 1;
         }
 
         // Si dentro de las sumas hay un -3, quiere decir que hubo tres -1s en fila
         // Entonces es victoria del jugador 2
-        if (sums().contains(-3)) {
+        if (getSums().contains(-boardSize)) {
             return -1;
         }
 
