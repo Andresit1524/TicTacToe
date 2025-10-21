@@ -16,8 +16,8 @@ import tictactoe.ui.UIUtilities;
  */
 public class Game {
     // Utilidades (se inicializan en el constructor para usar la misma instancia)
-    private final Scanner s;
-    private final Random r;
+    public final Scanner s;
+    public final Random r;
     private final InputChecker ic;
     private final BotHeuristics bh;
     private final WinChecker wc;
@@ -28,11 +28,6 @@ public class Game {
     private final int gameMode;
     private Player player1;
     private Player player2;
-
-    // Lista de nombres para bots
-    private String[] botsNameList = { "Wall-E", "R2-D2", "Optimus Prime", "Bumblebee", "HAL 9000", "Ultron", "Skynet",
-            "Deep Blue", "Watson", "Robocop"
-    };
 
     public Game(int gameMode, Scanner scanner) {
         this.gameMode = gameMode;
@@ -48,41 +43,6 @@ public class Game {
     }
 
     /**
-     * Función auxiliar que le pide un nombre al usuario
-     */
-    private String getPlayerName(int n) {
-        String name;
-        do {
-            System.out.println("| Ingresa el nombre del jugador " + n);
-            System.out.printf("| > ");
-            name = s.nextLine();
-
-            // Evita que ingrese una línea vacía
-            if (name.trim().isEmpty()) {
-                System.out.println("| El nombre no puede estar vacío. Intenta de nuevo");
-                uii.printBlankLine();
-            }
-        } while (name.trim().isEmpty());
-
-        return name;
-    }
-
-    /**
-     * Función auxiliar para obtener un nombre de bot aleatorio, asegurándose de que
-     * no se repita con un nombre dado.
-     */
-    private String getBotName(String existingName) {
-        String botName;
-
-        // Repite hasta obtener una versión válida
-        do {
-            botName = botsNameList[r.nextInt(botsNameList.length)];
-        } while (botName.equals(existingName));
-
-        return botName;
-    }
-
-    /**
      * Crea los dos nombres de los jugadores para la partida.
      */
     private String[] setPlayersNames() {
@@ -91,17 +51,17 @@ public class Game {
 
         switch (gameMode) {
             case 0: // Humano vs Humano
-                playerNames[0] = getPlayerName(1);
+                playerNames[0] = uii.getPlayerName(this, 1);
                 uii.printBlankLine();
-                playerNames[1] = getPlayerName(2);
+                playerNames[1] = uii.getPlayerName(this, 2);
                 break;
             case 1: // Humano vs Bot
-                playerNames[0] = getPlayerName(1);
-                playerNames[1] = getBotName(playerNames[0]);
+                playerNames[0] = uii.getPlayerName(this, 1);
+                playerNames[1] = uii.getBotName(this, playerNames[0]);
                 break;
             case 2: // Bot vs Bot
-                playerNames[0] = getBotName(null);
-                playerNames[1] = getBotName(playerNames[0]);
+                playerNames[0] = uii.getBotName(this, null);
+                playerNames[1] = uii.getBotName(this, playerNames[0]);
                 break;
             default:
                 // Esto no debería ocurrir, pero evitará erorres
@@ -187,16 +147,19 @@ public class Game {
         String[] playerNames = setPlayersNames();
         Player[] players = createPlayers(playerNames);
 
+        // Si el modo de juego involucra a un humano, ponemos línea en blanco
+        if (gameMode == 0 || gameMode == 1) {
+            uii.printBlankLine();
+        }
+
         // Imprime los nombres del enfrentamiento
         System.out.printf("| %s vs %s\n", playerNames[0], playerNames[1]);
-        uii.printBlankLine();
 
         // Alternamos los turnos con un booleano. El primer turno se asigna al azar
         boolean currTurn = r.nextBoolean();
 
         while (true) {
             // Imprime el tablero y el turno
-            System.out.println(board.getBoardString());
             uii.printBar();
             System.out.println("| Turno de " + (playerNames[currTurn ? 0 : 1]));
             uii.printBlankLine();
@@ -226,6 +189,9 @@ public class Game {
                 uii.printBar();
                 return;
             }
+
+            // Imprimimos el tablero
+            System.out.println(board.getBoardString());
 
             // Alternamos el turno
             currTurn = !currTurn;

@@ -1,5 +1,7 @@
 package tictactoe.ui;
 
+import tictactoe.business.Game;
+
 /**
  * Utilidades de impresión para mejorar la consistencia en la consola del juego.
  * 
@@ -7,6 +9,11 @@ package tictactoe.ui;
  * @version 1
  */
 public class UIUtilities {
+    // Lista de nombres para bots
+    public String[] botsNameList = { "Wall-E", "R2-D2", "Optimus Prime", "Bumblebee", "HAL 9000", "Ultron", "Skynet",
+            "Deep Blue", "Watson", "Robocop"
+    };
+
     /**
      * Imprime una línea vacía con el marco que tendrá en consola.
      */
@@ -57,5 +64,40 @@ public class UIUtilities {
         System.out.println("| 3. Bot vs Bot                                              |");
         System.out.println("| 4. Salir                                                   |");
         System.out.println("+------------------------------------------------------------+");
+    }
+
+    /**
+     * Función auxiliar para obtener un nombre de bot aleatorio, asegurándose de que
+     * no se repita con un nombre dado.
+     */
+    public String getBotName(Game game, String existingName) {
+        String botName;
+
+        // Repite hasta obtener una versión válida
+        do {
+            botName = botsNameList[game.r.nextInt(botsNameList.length)];
+        } while (botName.equals(existingName));
+
+        return botName;
+    }
+
+    /**
+     * Función auxiliar que le pide un nombre al usuario
+     */
+    public String getPlayerName(Game game, int n) {
+        String name;
+        do {
+            System.out.println("| Ingresa el nombre del jugador " + n);
+            System.out.printf("| > ");
+            name = game.s.nextLine();
+
+            // Evita que ingrese una línea vacía
+            if (name.trim().isEmpty()) {
+                System.out.println("| El nombre no puede estar vacío. Intenta de nuevo");
+                printBlankLine();
+            }
+        } while (name.trim().isEmpty());
+
+        return name;
     }
 }
