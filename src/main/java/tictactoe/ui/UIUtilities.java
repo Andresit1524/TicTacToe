@@ -1,6 +1,8 @@
 package tictactoe.ui;
 
-import tictactoe.business.Game;
+import java.util.Scanner;
+
+import tictactoe.data.Board;
 
 /**
  * Utilidades de impresión para mejorar la consistencia en la consola del juego.
@@ -9,10 +11,11 @@ import tictactoe.business.Game;
  * @version 1
  */
 public class UIUtilities {
-    // Lista de nombres para bots
-    public String[] botsNameList = { "Wall-E", "R2-D2", "Optimus Prime", "Bumblebee", "HAL 9000", "Ultron", "Skynet",
-            "Deep Blue", "Watson", "Robocop"
-    };
+    private final Scanner s;
+
+    public UIUtilities(Scanner scanner) {
+        this.s = scanner;
+    }
 
     /**
      * Imprime una línea vacía con el marco que tendrá en consola.
@@ -67,29 +70,14 @@ public class UIUtilities {
     }
 
     /**
-     * Función auxiliar para obtener un nombre de bot aleatorio, asegurándose de que
-     * no se repita con un nombre dado.
-     */
-    public String getBotName(Game game, String existingName) {
-        String botName;
-
-        // Repite hasta obtener una versión válida
-        do {
-            botName = botsNameList[game.r.nextInt(botsNameList.length)];
-        } while (botName.equals(existingName));
-
-        return botName;
-    }
-
-    /**
      * Función auxiliar que le pide un nombre al usuario
      */
-    public String getPlayerName(Game game, int n) {
+    public String getPlayerName(int n) {
         String name;
         do {
             System.out.println("| Ingresa el nombre del jugador " + n);
             System.out.printf("| > ");
-            name = game.s.nextLine();
+            name = s.nextLine();
 
             // Evita que ingrese una línea vacía
             if (name.trim().isEmpty()) {
@@ -99,5 +87,46 @@ public class UIUtilities {
         } while (name.trim().isEmpty());
 
         return name;
+    }
+
+    /**
+     * Convierte el tablero en una representación de string que pueda ser impresa.
+     * También hace conversión del signo a O (jugador 1) o X (jugador 2).
+     */
+    public String getBoardString(Board board) {
+        String boardString = "";
+        int[][] boardData = board.getBoard();
+
+        // Recorre cada fila
+        for (int row = 0; row < boardData.length; row++) {
+            boardString += "| | ";
+
+            // Recorre cada elemento de la fila
+            for (int square : boardData[row]) {
+                switch (square) {
+                    case 0:
+                        boardString += " ";
+                        break;
+                    case 1:
+                        boardString += "O";
+                        break;
+                    case -1:
+                        boardString += "X";
+                        break;
+                    default:
+                        break;
+                }
+
+                // Espacio entre elementos (incluyendo el último, como borde)
+                boardString += " | ";
+            }
+
+            // Salto de línea entre filas (excepto en la última)
+            if (row != boardData.length - 1) {
+                boardString += "\n";
+            }
+        }
+
+        return boardString;
     }
 }

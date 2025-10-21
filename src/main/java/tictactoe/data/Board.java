@@ -9,7 +9,7 @@ package tictactoe.data;
  * - -1: jugador 2
  * 
  * @author Andrés López
- * @version 1
+ * @version 1.1
  */
 public class Board {
     // Arreglo que almacena el tablero
@@ -73,46 +73,6 @@ public class Board {
         board[row][col] = movement;
 
         return true;
-    }
-
-    /**
-     * Convierte el tablero en una representación de string que pueda ser impresa.
-     * También hace conversión del signo a O (jugador 1) o X (jugador 2).
-     */
-    public String getBoardString() {
-        String boardString = "";
-
-        // Recorre cada fila
-        for (int row = 0; row < board.length; row++) {
-            boardString += "| | ";
-
-            // Recorre cada elemento de la fila
-            for (int square : board[row]) {
-                switch (square) {
-                    case 0:
-                        boardString += " ";
-                        break;
-                    case 1:
-                        boardString += "O";
-                        break;
-                    case -1:
-                        boardString += "X";
-                        break;
-                    default:
-                        break;
-                }
-
-                // Espacio entre elementos (incluyendo el último, como borde)
-                boardString += " | ";
-            }
-
-            // Salto de línea entre filas (excepto en la última)
-            if (row != board.length - 1) {
-                boardString += "\n";
-            }
-        }
-
-        return boardString;
     }
 
     /**
