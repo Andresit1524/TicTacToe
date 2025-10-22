@@ -9,7 +9,7 @@ import tictactoe.ui.InputChecker;
 import tictactoe.ui.UIUtilities;
 
 /**
- * Controla una única partida del juego
+ * Controla una única partida del juego.
  * 
  * @author Andrés López
  * @version 2

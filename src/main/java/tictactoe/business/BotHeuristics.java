@@ -95,7 +95,8 @@ public class BotHeuristics {
             if (boardCopy.setSquare(player, i)) {
                 // Comprueba si ese movimiento gana en la copia
                 if (new WinChecker(boardCopy).winner() == player) {
-                    return i + 1; // Devuelve la casilla (1-9)
+                    // Devuelve la casilla (1-9)
+                    return i + 1;
                 }
             }
         }

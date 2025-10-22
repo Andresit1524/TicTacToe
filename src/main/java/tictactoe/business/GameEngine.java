@@ -9,12 +9,16 @@ import tictactoe.ui.UIUtilities;
 /**
  * Programa principal. Controla todo el flujo del juego.
  * 
+ * 🗣️ Nota del autor: No se hacen más revisiones de este código. Cualquier
+ * error de escritura o funcionamiento que tenga el programa será considerado
+ * una característica.
+ * 
  * @author Andrés López
  * @version 2
  */
 public class GameEngine {
     public static void main(String[] args) {
-        // Se crea únicas instancias para toda la aplicación
+        // Se crean únicas instancias para toda la aplicación
         Scanner s = new Scanner(System.in);
         Random r = new Random();
         InputChecker ic = new InputChecker(s);

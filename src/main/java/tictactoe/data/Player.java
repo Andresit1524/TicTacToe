@@ -21,6 +21,7 @@ public class Player {
 
     /**
      * Constructor para (generalmente) bots.
+     * 
      * Puedes indicar que es humano con isBot = false.
      */
     public Player(String name, boolean isBot) {
@@ -29,14 +30,14 @@ public class Player {
     }
 
     /**
-     * Obtiene el nombre del jugador
+     * Obtiene el nombre del jugador.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Obtiene el rol (humano o bot) del jugador
+     * Obtiene el rol (humano o bot) del jugador.
      */
     public boolean isBot() {
         return isBot;
