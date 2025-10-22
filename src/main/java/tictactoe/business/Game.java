@@ -12,7 +12,7 @@ import tictactoe.ui.UIUtilities;
  * Controla una única partida del juego
  * 
  * @author Andrés López
- * @version 1.2
+ * @version 2
  */
 public class Game {
     // Utilidades (se inicializan en el constructor para usar la misma instancia)
@@ -29,15 +29,15 @@ public class Game {
     private Player player1;
     private Player player2;
 
-    public Game(int gameMode, Scanner scanner) {
+    public Game(int gameMode, Scanner scanner, Random random) {
         this.gameMode = gameMode;
         this.board = new Board();
 
         // Utilidades
         this.s = scanner;
-        this.r = new Random();
+        this.r = random;
         this.ic = new InputChecker(scanner);
-        this.bh = new BotHeuristics();
+        this.bh = new BotHeuristics(r);
         this.wc = new WinChecker(this.board);
         this.uii = new UIUtilities();
     }
@@ -77,7 +77,7 @@ public class Game {
     /**
      * Crea los jugadores a partir de los nombres.
      */
-    private Player[] createPlayers(String[] playerNames) {
+    private void createPlayers(String[] playerNames) {
         // Determina si cada jugador es un bot basándose en el gameMode
         boolean isPlayer1Bot = (gameMode == 2); // El jugador 2 es bot solo en modo "Bot vs Bot"
         boolean isPlayer2Bot = (gameMode == 1 || gameMode == 2); // Bot en modos "Humano vs Bot" o "Bot vs Bot"
@@ -85,8 +85,6 @@ public class Game {
         // Crea a los jugadores con sus modos
         player1 = new Player(playerNames[0], isPlayer1Bot);
         player2 = new Player(playerNames[1], isPlayer2Bot);
-
-        return new Player[] { player1, player2 };
     }
 
     /**
@@ -101,9 +99,10 @@ public class Game {
             // Ingresa la casilla desde la consola
             System.out.println("| Ingresa la casilla a jugar (1-9)");
             square = ic.getInteger(1, 9);
+            uii.printBlankLine();
 
             // Coloca el cuadrado
-            settedSquare = board.setSquare(currTurn ? 1 : -1, square - 1);
+            settedSquare = board.setSquare(currTurn ? Board.PLAYER_1 : Board.PLAYER_2, square - 1);
 
             if (!settedSquare) {
                 System.out.println("| Casilla ocupada. Intenta de nuevo");
@@ -132,7 +131,7 @@ public class Game {
         // Repetimos hasta que haya movimiento o el tablero se llene
         while (!settedSquare && !board.isFull()) {
             // Anotamos el valor del oponente para elegir la jugada del bot
-            int playerValue = currTurn ? 1 : -1;
+            int playerValue = currTurn ? Board.PLAYER_1 : Board.PLAYER_2;
 
             // No validamos si la jugada se hizo porque bh.getBestMove() lo hace
             square = bh.getBestMove(board, playerValue);
@@ -145,7 +144,7 @@ public class Game {
      */
     public void start() {
         String[] playerNames = setPlayersNames();
-        Player[] players = createPlayers(playerNames);
+        createPlayers(playerNames);
 
         // Si el modo de juego involucra a un humano, ponemos línea en blanco
         if (gameMode == 0 || gameMode == 1) {
@@ -165,7 +164,7 @@ public class Game {
             uii.printBlankLine();
 
             // Juega el turno dependiendo de si le toca a un humano o a un bot
-            if (!players[currTurn ? 0 : 1].isBot()) {
+            if (!(currTurn ? player1 : player2).isBot()) {
                 humanTurn(currTurn);
             } else {
                 botTurn(currTurn);
@@ -175,10 +174,10 @@ public class Game {
             int winner = wc.winner();
 
             // Primero, revisa si alguien ganó. Si nadie ganó, revisa si hay empate
-            if (winner != 0) {
+            if (winner != Board.EMPTY) {
                 System.out.println(board.getBoardString());
                 uii.printBar();
-                String winnerName = (winner == 1) ? playerNames[0] : playerNames[1];
+                String winnerName = (winner == Board.PLAYER_1) ? playerNames[0] : playerNames[1];
                 System.out.println("| ¡Fin del juego! el ganador es " + winnerName);
                 uii.printBar();
                 return;

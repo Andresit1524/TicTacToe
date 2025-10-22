@@ -6,7 +6,7 @@ import tictactoe.business.Game;
  * Utilidades de impresión para mejorar la consistencia en la consola del juego.
  * 
  * @author Andrés López
- * @version 1
+ * @version 2
  */
 public class UIUtilities {
     // Lista de nombres para bots
@@ -51,6 +51,20 @@ public class UIUtilities {
         System.out.println("| 4. Juega indicando la casilla a jugar (1-9)                |");
         System.out.println("| 5. Gana el primero en hacer 3 en raya                      |");
         System.out.println("+------------------------------------------------------------+");
+    }
+
+    /**
+     * Imprime el tablero de posiciones para que el usuario sepa como ingresar las
+     * jugadas.
+     */
+    public void printBoardInstructions() {
+        System.out.println("|              Posiciones de las casillas (1-9)              |");
+        System.out.println("|                                                            |");
+        System.out.println("|                       | 1 | 2 | 3 |                        |");
+        System.out.println("|                       | 4 | 5 | 6 |                        |");
+        System.out.println("|                       | 7 | 8 | 9 |                        |");
+        System.out.println("+------------------------------------------------------------+");
+
     }
 
     /**

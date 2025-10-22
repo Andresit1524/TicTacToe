@@ -10,7 +10,7 @@ import tictactoe.data.Board;
  * errores y evitar el hardcoding.
  * 
  * @author Andrés López
- * @version 1.2
+ * @version 2
  */
 public class WinChecker {
     private Board board;
@@ -86,16 +86,16 @@ public class WinChecker {
         // Si en las sumas hay un valor de n, quiere decir que hubo n 1s en fila
         // Entonces es victoria del jugador 1
         if (sums.contains(boardSize)) {
-            return 1;
+            return Board.PLAYER_1;
         }
 
         // Si en las sumas hay un valor de -n, quiere decir que hubo n -1s en fila
         // Entonces es victoria del jugador 2
         if (sums.contains(-boardSize)) {
-            return -1;
+            return Board.PLAYER_2;
         }
 
         // Si no es nada de lo anterior, entonces es empate o partida en curso
-        return 0;
+        return Board.EMPTY;
     }
 }

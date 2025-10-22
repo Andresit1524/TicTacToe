@@ -1,7 +1,6 @@
 package tictactoe.business;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Random;
 
 import tictactoe.data.Board;
@@ -11,10 +10,21 @@ import tictactoe.data.Board;
  * jugadores no humanos se almacenan como parte de la clase Player.
  * 
  * @author Andrés López
- * @version 1.1
+ * @version 2
  */
 public class BotHeuristics {
-    Random r = new Random();
+    private final Random r;
+
+    // Constantes para la heurística del bot
+    private static final int NO_MOVE_FOUND = -1;
+    private static final int TOTAL_SQUARES = 9;
+    private static final int CENTER_SQUARE = 5;
+    private static final int[] CORNER_SQUARES = { 1, 3, 7, 9 };
+    private static final int[] SIDE_SQUARES = { 2, 4, 6, 8 };
+
+    public BotHeuristics(Random random) {
+        this.r = random;
+    }
 
     /**
      * Obtiene el mejor movimiento dado el tablero actual.
@@ -24,62 +34,60 @@ public class BotHeuristics {
 
         // Prioridad 1: Buscar un movimiento para ganar
         int move = findWinningOrBlockingMove(board, botPlayerValue);
-        if (move != -1) {
+        if (move != NO_MOVE_FOUND) {
             return move;
         }
 
         // Prioridad 2: Buscar un movimiento para bloquear al oponente
         move = findWinningOrBlockingMove(board, opponentPlayerValue);
-        if (move != -1) {
+        if (move != NO_MOVE_FOUND) {
             return move;
         }
 
         // Prioridad 3: Tomar el centro si está disponible
-        if (board.isAvailableSquare(1, 1)) {
-            return 5; // La casilla 5 es el centro (índice 4)
+        if (board.isAvailableSquare(CENTER_SQUARE)) {
+            return CENTER_SQUARE;
         }
 
         // Prioridad 4: Tomar una esquina vacía
-        ArrayList<Integer> corners = new ArrayList<>();
-        if (board.isAvailableSquare(0, 0))
-            corners.add(1);
-        if (board.isAvailableSquare(0, 2))
-            corners.add(3);
-        if (board.isAvailableSquare(2, 0))
-            corners.add(7);
-        if (board.isAvailableSquare(2, 2))
-            corners.add(9);
-        if (!corners.isEmpty()) {
-            Collections.shuffle(corners); // Elige una esquina al azar
-            return corners.get(0);
+        ArrayList<Integer> availableCorners = new ArrayList<>();
+        for (int corner : CORNER_SQUARES) {
+            if (board.isAvailableSquare(corner)) {
+                availableCorners.add(corner);
+            }
+        }
+
+        // Elige una esquina al azar
+        if (!availableCorners.isEmpty()) {
+            return availableCorners.get(r.nextInt(availableCorners.size()));
         }
 
         // Prioridad 5: Tomar un lado vacío
-        ArrayList<Integer> sides = new ArrayList<>();
-        if (board.isAvailableSquare(0, 1))
-            sides.add(2);
-        if (board.isAvailableSquare(1, 0))
-            sides.add(4);
-        if (board.isAvailableSquare(1, 2))
-            sides.add(6);
-        if (board.isAvailableSquare(2, 1))
-            sides.add(8);
-        if (!sides.isEmpty()) {
-            Collections.shuffle(sides); // Elige un lado al azar
-            return sides.get(0);
+        ArrayList<Integer> availableSides = new ArrayList<>();
+        for (int side : SIDE_SQUARES) {
+            if (board.isAvailableSquare(side)) {
+                availableSides.add(side);
+            }
         }
 
-        // Si todo lo demás falla (no debería ocurrir en un juego normal), movimiento
-        // aleatorio
-        return r.nextInt(9) + 1;
+        if (!availableSides.isEmpty()) {
+            return availableSides.get(r.nextInt(availableSides.size()));
+        }
+
+        // Si todo lo demás falla (no debería ocurrir), mueve al azar
+        return r.nextInt(TOTAL_SQUARES) + 1;
     }
 
     /**
-     * Busca una línea con dos fichas de un jugador y una casilla vacía.
+     * Busca un movimiento que complete una línea de tres para un jugador.
+     * 
+     * Esta función es la heurística principal para que el bot decida un movimiento
+     * ganador (si se usa con su propio ID) o un movimiento de bloqueo (si se usa
+     * con el ID del oponente).
      */
     private int findWinningOrBlockingMove(Board board, int player) {
-        // Recorremos las 9 casillas
-        for (int i = 0; i < 9; i++) {
+        // Recorremos todas las casillas del tablero
+        for (int i = 0; i < TOTAL_SQUARES; i++) {
             // Crea una copia del tablero para simular el movimiento
             Board boardCopy = new Board(board);
 
@@ -91,6 +99,7 @@ public class BotHeuristics {
                 }
             }
         }
-        return -1; // No se encontró movimiento
+
+        return NO_MOVE_FOUND; // No se encontró movimiento
     }
 }

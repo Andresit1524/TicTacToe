@@ -5,7 +5,7 @@ package tictactoe.data;
  * control del juego.
  * 
  * @author Andrés López
- * @version 1
+ * @version 2
  */
 public class Player {
     private String name;
