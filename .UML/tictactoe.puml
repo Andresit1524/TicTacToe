@@ -1,0 +1,123 @@
+@startuml tictactoe
+package "business" #LightBlue {
+  class BotHeuristics {
+    -r: Random
+    -{static} NO_MOVE_FOUND: int = -1
+    -{static} TOTAL_SQUARES: int = 9
+    -{static} CENTER_SQUARE: int = 5
+    -{static} CORNER_SQUARES: int = { 1, 3, 7, 9 }
+    -{static} SIDE_SQUARES: int = { 2, 4, 6, 8 }
+    --
+    +BotHeuristics(random: Random)
+    +getBestMove(board: Board, botPlayerValue: int): int
+    -findWinningOrBlockingMove(board: Board, player: int): int
+  }
+
+  class Game {
+    +s: Scanner
+    +r: Random
+    -ic: InputChecker
+    -bh: BotHeuristics
+    -wc: WinChecker
+    -uii: UIUtilities
+    -board: Board
+    -gameMode: int
+    -player1: Player
+    -player2: Player
+    --
+    +Game(gameMode: int, scanner: Scanner, random: Random)
+    -setPlayersNames(): String[]
+    -createPlayers(playerNames: String[]): void
+    -humanTurn(currTurn: boolean): void
+    -botTurn(currTurn: boolean): void
+    +start(): void
+  }
+
+  class GameEngine {
+    +{static} main(args: String[]): void
+  }
+
+  class WinChecker {
+    -board: Board
+    -boardSize: int
+    --
+    +WinChecker(board: Board)
+    -getSums(): ArrayList<Integer>
+    +winner(): int
+  }
+}
+
+package "data" #LightGreen {
+  class Board {
+    +{static} EMPTY: int = 0
+    +{static} PLAYER_1: int = 1
+    +{static} PLAYER_2: int = -1
+    -{static} SIZE: int = 3
+    -board: int
+    --
+    +Board()
+    +Board(other: Board)
+    +isFull(): boolean
+    +isAvailableSquare(row: int, col: int): boolean
+    +isAvailableSquare(square: int): boolean
+    +setSquare(movement: int, square: int): boolean
+    +getBoardString(): String
+    +getBoard(): int[][]
+    +getSquare(row: int, col: int): int
+  }
+
+  class Player {
+    -name: String
+    -isBot: boolean
+    --
+    +Player(name: String)
+    +Player(name: String, isBot: boolean)
+    +getName(): String
+    +isBot(): boolean
+  }
+}
+
+package "ui" #LightYellow {
+  class InputChecker {
+    -s: Scanner
+    -uii: UIUtilities
+    --
+    +InputChecker(scanner: Scanner)
+    +getInteger(min: int, max: int): int
+    +getInteger(): int
+  }
+
+  class UIUtilities {
+    +botsNameList: String = { "Wall-E", "R2-D2", "Optimus Prime", "Bumblebee", "HAL 9000", "Ultron", "Skynet", "Deep Blue", "Watson", "Robocop" }
+    --
+    +printBlankLine(): void
+    +printBar(): void
+    +printHeader(): void
+    +printInstructions(): void
+    +printBoardInstructions(): void
+    +printModesMenu(): void
+    +getBotName(game: Game, existingName: String): String
+    +getPlayerName(game: Game, n: int): String
+  }
+}
+
+' Punto de entrada de la aplicación
+GameEngine ..> Game : "crea e inicia"
+GameEngine ..> UIUtilities : "usa para mostrar menús"
+GameEngine ..> InputChecker : "usa para leer la opción"
+
+' La clase Game orquesta la partida
+Game *-- InputChecker : "usa para validar la entrada"
+Game *-- BotHeuristics : "usa para calcular la jugada del bot"
+Game *-- WinChecker : "usa para determinar si hay un ganador"
+Game *-- UIUtilities : "usa para operaciones de UI"
+Game *-- Board : "crea y gestiona el tablero"
+Game *-- Player : "crea y gestiona los jugadores"
+
+' Otras dependencias y relaciones
+BotHeuristics ..> Board : "consulta y simula para encontrar la mejor jugada"
+WinChecker *-- Board : "analiza el estado para encontrar un ganador"
+Board ..> Board : "se clona para simular jugadas"
+InputChecker *-- UIUtilities : "usa para mostrar mensajes de error"
+UIUtilities ..> Game : "accede para obtener Scanner y Random"
+@enduml
