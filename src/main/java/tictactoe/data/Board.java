@@ -15,7 +15,7 @@ public class Board {
     public static final int EMPTY = 0;
     public static final int PLAYER_1 = 1;
     public static final int PLAYER_2 = -1;
-    private static final int SIZE = 3;
+    public static final int SIZE = 3;
 
     // Arreglo que almacena el tablero
     private int[][] board;

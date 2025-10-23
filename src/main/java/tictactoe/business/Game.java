@@ -98,7 +98,7 @@ public class Game {
         while (!settedSquare && !board.isFull()) {
             // Ingresa la casilla desde la consola
             System.out.println("| Ingresa la casilla a jugar (1-9)");
-            square = ic.getInteger(1, 9);
+            square = ic.getInteger(1, Board.SIZE * Board.SIZE);
             uii.printBlankLine();
 
             // Coloca el cuadrado
@@ -118,14 +118,17 @@ public class Game {
         int square;
         boolean settedSquare = false;
 
-        // Hacemos una pausa de 1500 +- 1000 ms para que el bot no sea instantáneo
-        try {
-            int baseTime = 1500;
-            int variance = 1000;
-            Thread.sleep(baseTime + r.nextInt(-variance, variance));
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            System.err.println("La pausa del juego fue interrumpida.");
+        // Hacemos una pausa de 1000 +- 500 ms para que el bot no sea instantáneo
+        // Solo si el tamaño del tablero es menor a 6 de lado
+        if (Board.SIZE < 6) {
+            try {
+                int baseTime = 1000;
+                int variance = 500;
+                Thread.sleep(baseTime + r.nextInt(-variance, variance));
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.err.println("La pausa del juego fue interrumpida.");
+            }
         }
 
         // Repetimos hasta que haya movimiento o el tablero se llene

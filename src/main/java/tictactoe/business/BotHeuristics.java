@@ -17,7 +17,7 @@ public class BotHeuristics {
 
     // Constantes para la heurística del bot
     private static final int NO_MOVE_FOUND = -1;
-    private static final int TOTAL_SQUARES = 9;
+    private static final int TOTAL_SQUARES = Board.SIZE * Board.SIZE;
     private static final int CENTER_SQUARE = 5;
     private static final int[] CORNER_SQUARES = { 1, 3, 7, 9 };
     private static final int[] SIDE_SQUARES = { 2, 4, 6, 8 };
@@ -70,11 +70,12 @@ public class BotHeuristics {
             }
         }
 
+        // Elige un lado al azar
         if (!availableSides.isEmpty()) {
             return availableSides.get(r.nextInt(availableSides.size()));
         }
 
-        // Si todo lo demás falla (no debería ocurrir), mueve al azar
+        // En tableros más grandes, mueve al azar
         return r.nextInt(TOTAL_SQUARES) + 1;
     }
 
