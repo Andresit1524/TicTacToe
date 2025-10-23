@@ -43,11 +43,14 @@ public class Board {
         for (int[] row : board) {
             for (int square : row) {
                 if (square == EMPTY) {
-                    return false; // Encontramos un espacio vacío, no está lleno.
+                    // Encontramos un espacio vacío, no está lleno
+                    return false;
                 }
             }
         }
-        return true; // No se encontraron espacios vacíos, está lleno.
+
+        // No se encontraron espacios vacíos, está lleno
+        return true;
     }
 
     /**
@@ -58,7 +61,8 @@ public class Board {
     }
 
     /**
-     * Evalúa si el recuadro seleccionado está disponible, usando el número de casilla (1-9).
+     * Evalúa si el recuadro seleccionado está disponible, usando el número de
+     * casilla (1-9).
      */
     public boolean isAvailableSquare(int square) {
         // Convierte el número de casilla (1-9) a un índice (0-8)
@@ -68,11 +72,11 @@ public class Board {
         if (index < 0 || index >= SIZE * SIZE) {
             return false;
         }
-        
+
         // Convierte a coordenadas y reutiliza el método existente
         int row = index / SIZE;
         int col = index % SIZE;
-        
+
         return isAvailableSquare(row, col);
     }
 
