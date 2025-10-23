@@ -170,27 +170,25 @@ public class Game {
                 botTurn(currTurn);
             }
 
+            // Imprimimos el tablero
+            System.out.println(board.getBoardString());
+
             // Verifica si el tablero es ganador
             int winner = wc.winner();
 
             // Primero, revisa si alguien ganó. Si nadie ganó, revisa si hay empate
             if (winner != Board.EMPTY) {
-                System.out.println(board.getBoardString());
-                uii.printBar();
                 String winnerName = (winner == Board.PLAYER_1) ? playerNames[0] : playerNames[1];
+                uii.printBar();
                 System.out.println("| ¡Fin del juego! el ganador es " + winnerName);
                 uii.printBar();
                 return;
             } else if (board.isFull()) {
-                System.out.println(board.getBoardString());
                 uii.printBar();
                 System.out.println("| ¡Fin del juego! empate");
                 uii.printBar();
                 return;
             }
-
-            // Imprimimos el tablero
-            System.out.println(board.getBoardString());
 
             // Alternamos el turno
             currTurn = !currTurn;
